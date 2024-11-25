@@ -1,20 +1,59 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Nov 24 17:58:12 2024
-
-@author: hadikalach-chemeng
-"""
-
 import turtle
 import time
-import math
+import random
 
 # Create screen
 sc = turtle.Screen()  # This just creates a graphical screen, where our game will be.
 sc.title("Pong game")  # Title name
-sc.bgcolor("white")  # Background color
+sc.bgcolor("green")  # Background color
 sc.setup(width=1000, height=600)  # Dimensions of screen: (-500-500, and -300 to 300)
+
+# Draw borders manually - Joaquin
+border = turtle.Turtle()
+border.speed(0)
+border.color("white")
+border.penup()
+
+# Start at the top-left corner of the border - Joaquin
+border.goto(-500, 300) 
+border.pendown()
+border.pensize(40)
+
+# Draw the border rectangle - Joaquin
+border.goto(500, 300) 
+border.goto(500, -300)  
+border.goto(-500, -300)  
+border.goto(-500, 300)  
+border.hideturtle() 
+
+
+#draw the center circle - Joaquin
+circle = turtle.Turtle()
+circle.speed(0)
+circle.color("white")
+circle.penup()
+circle.goto(0,0)
+circle.shape("circle")
+circle.shapesize(7,7)
+
+#draw the green center circle part - Joaquin
+circle = turtle.Turtle()
+circle.speed(0)
+circle.color("green")
+circle.penup()
+circle.goto(0,0)
+circle.shape("circle")
+circle.shapesize(5,5)
+
+#draw the center line to split the halves - Joaquin
+middle = turtle.Turtle()
+middle.speed(0)
+middle.color("white")
+middle.penup()
+middle.goto(0,0) #center of the grid
+middle.shape("square")
+middle.shapesize(stretch_wid = 1000, stretch_len=1) #length and width of the rectangle 
+
 
 # Left paddle
 left_pad = turtle.Turtle()  # On turtle, this creates an object
@@ -96,6 +135,11 @@ sc.onkeypress(paddleadown, "s")  # Changed to 's'
 sc.onkeypress(paddlebup, "Up")
 sc.onkeypress(paddlebdown, "Down")
 
+def RandomColourChanger(): #Joaquin - made a function to return a random colour choice from the list. This choice will
+                            # then be used when there is a ball collision
+    ball_colours = ["brown","yellow","black","orange","blue","gray","white","red"]
+    A = random.choice(ball_colours)
+    return A
 
 def reset_game():  # HK: Function to reset the game
     global left_player, right_player, hit_ball, game_over  # HK: Bringing variables outside the function into this function, learned from tkinter experience :)
@@ -140,10 +184,14 @@ while True:  # HK: Main loop for the game to keep running
     if hit_ball.ycor() > 280:  # HK: If the ball touches the top border of the screen
         hit_ball.sety(280)  # HK: Place the ball at the top border
         hit_ball.dy *= -1  # HK: Reverse the ball's vertical direction
+        #Joaquin - changes the colour on a hit of a paddle or wall
+        hit_ball.color(RandomColourChanger()) 
 
     if hit_ball.ycor() < -280:  # HK: If the ball touches the bottom border of the screen
         hit_ball.sety(-280)  # HK: Place the ball at the bottom border
         hit_ball.dy *= -1  # HK: Reverse the ball's vertical direction
+        #Joaquin - changes the colour on a hit of a paddle or wall
+        hit_ball.color(RandomColourChanger()) 
 
     # Scoring logic
     if hit_ball.xcor() > 500: 
