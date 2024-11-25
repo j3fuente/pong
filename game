@@ -1,104 +1,66 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 25 18:09:44 2024
+
+@author: hadikalach-chemeng
+"""
+
 import turtle
 import time
-import random #added a random module for the colour changer - Joaquin
+import math
 
 # Create screen
-sc = turtle.Screen()
-sc.title("Pong game")
-sc.bgcolor("green")
-sc.setup(width=1000, height=600)
-
-# Draw borders manually - Joaquin
-border = turtle.Turtle()
-border.speed(0)
-border.color("white")
-border.penup()
-
-# Start at the top-left corner of the border - Joaquin
-border.goto(-500, 300) 
-border.pendown()
-border.pensize(40)
-
-# Draw the border rectangle - Joaquin
-border.goto(500, 300) 
-border.goto(500, -300)  
-border.goto(-500, -300)  
-border.goto(-500, 300)  
-border.hideturtle() 
-
-
-#draw the center circle - Joaquin
-circle = turtle.Turtle()
-circle.speed(0)
-circle.color("white")
-circle.penup()
-circle.goto(0,0)
-circle.shape("circle")
-circle.shapesize(7,7)
-
-#draw the green center circle part - Joaquin
-circle = turtle.Turtle()
-circle.speed(0)
-circle.color("green")
-circle.penup()
-circle.goto(0,0)
-circle.shape("circle")
-circle.shapesize(5,5)
-
-#draw the center line to split the halves - Joaquin
-middle = turtle.Turtle()
-middle.speed(0)
-middle.color("white")
-middle.penup()
-middle.goto(0,0) #center of the grid
-middle.shape("square")
-middle.shapesize(stretch_wid = 1000, stretch_len=1) #length and width of the rectangle 
+sc = turtle.Screen()  # This creates a graphical screen where our game will run.
+sc.title("Pong game")  # Title name
+sc.bgcolor("white")  # Background color
+sc.setup(width=1000, height=600)  # Dimensions of screen (-500 to 500, and -300 to 300)
 
 # Left paddle
-left_pad = turtle.Turtle()
-left_pad.speed(0)
-left_pad.shape("square")
-left_pad.color("black")
-left_pad.shapesize(stretch_wid=6, stretch_len=2)
-left_pad.penup()
-left_pad.goto(-400, 0)  # Start in the middle of the screen vertically
+left_pad = turtle.Turtle()  # Creates an object for the left paddle
+left_pad.speed(0)  # Initial speed of the paddle
+left_pad.shape("square")  # Shape of the paddle
+left_pad.color("black")  # Color of the paddle
+left_pad.shapesize(stretch_wid=6, stretch_len=2)  # Paddle dimensions
+left_pad.penup()  # Prevents drawing of lines while moving
+left_pad.goto(-400, 0)  # Position of the left paddle at the far left of the screen
 
 # Right paddle
-right_pad = turtle.Turtle()
-right_pad.speed(0)
-right_pad.shape("square")
-right_pad.color("black")
-right_pad.shapesize(stretch_wid=6, stretch_len=2)
-right_pad.penup()
-right_pad.goto(400, 0)  # Start in the middle of the screen vertically
+right_pad = turtle.Turtle()  # Creates an object for the right paddle
+right_pad.speed(0)  # Initial speed of the paddle
+right_pad.shape("square")  # Shape of the paddle
+right_pad.color("black")  # Color of the paddle
+right_pad.shapesize(stretch_wid=6, stretch_len=2)  # Paddle dimensions
+right_pad.penup()  # Prevents drawing of lines while moving
+right_pad.goto(400, 0)  # Position of the right paddle at the far right of the screen
 
 # Ball of circle shape
-hit_ball = turtle.Turtle()
-hit_ball.speed(4)  # Initial speed
-hit_ball.shape("circle")
-hit_ball.color("blue")
-hit_ball.penup()
-hit_ball.goto(0, 0)
+hit_ball = turtle.Turtle()  # Creates an object for the ball
+hit_ball.speed(0)  # Initial speed of the ball
+hit_ball.shape("circle")  # Shape of the ball
+hit_ball.color("black")  # Color of the ball
+hit_ball.penup()  # Prevents drawing of lines while moving
+hit_ball.goto(0, 0)  # Position of the ball in the center
 
-# Original speed values
-original_dx = 5
-original_dy = -5
+# Original speed values for the ball (movement)
+original_dx = 3  # X-direction movement speed
+original_dy = -3  # Y-direction movement speed
 
 # Set ball speed to original values
-hit_ball.dx = original_dx
-hit_ball.dy = original_dy
+hit_ball.dx = original_dx  # Setting X-movement of the ball
+hit_ball.dy = original_dy  # Setting Y-movement of the ball
 
-# Initialize the score
+# Initialize scores for both players
 left_player = 0
 right_player = 0
 
-# Displays the score at the top
+# Display score at the top of the screen
 sketch = turtle.Turtle()
 sketch.speed(0)
 sketch.color("blue")
 sketch.penup()
 sketch.hideturtle()
-sketch.goto(0, 260)  # Score is at the top
+sketch.goto(0, 260)  # Score is displayed at the top of the screen
 sketch.write("Left_player : 0    Right_player: 0",
              align="center", font=("Courier", 24, "normal"))
 
@@ -111,7 +73,7 @@ def paddleaup():
 
 def paddleadown():
     y = left_pad.ycor()
-    if y > -240:  # Limit paddle movement
+    if y > -240:  # Limit paddle movement to bottom
         y -= 20
         left_pad.sety(y)
 
@@ -123,115 +85,101 @@ def paddlebup():
 
 def paddlebdown():
     y = right_pad.ycor()
-    if y > -240:  # Limit paddle movement
+    if y > -240:  # Limit paddle movement to bottom
         y -= 20
         right_pad.sety(y)
 
 # Keyboard bindings
 sc.listen()
-sc.onkeypress(paddleaup, "w")  # Changed to 'w'
-sc.onkeypress(paddleadown, "s")  # Changed to 's'
-sc.onkeypress(paddlebup, "Up")
-sc.onkeypress(paddlebdown, "Down")
+sc.onkeypress(paddleaup, "w")  # Left paddle moves up with 'w'
+sc.onkeypress(paddleadown, "s")  # Left paddle moves down with 's'
+sc.onkeypress(paddlebup, "Up")  # Right paddle moves up with 'Up Arrow'
+sc.onkeypress(paddlebdown, "Down")  # Right paddle moves down with 'Down Arrow'
 
-def RandomColourChanger(): #Joaquin - made a function to return a random colour choice from the list. This choice will
-                            # then be used when there is a ball collision
-    ball_colours = ["brown","yellow","black","orange","blue","gray","white","red"]
-    A = random.choice(ball_colours)
-    return A
+# Reset the game when 'r' is pressed
+def reset_game():  # HK: Function to reset the game
+    global left_player, right_player, hit_ball, game_over  # HK: Bringing global variables into the function
+    
+    # HK: Reset ball position and speed
+    hit_ball.goto(0, 0)  # Reset ball to the center
+    hit_ball.dx = original_dx  # Reset ball's X-movement
+    hit_ball.dy = original_dy  # Reset ball's Y-movement
 
-# Function to reset the game
-def reset_game():
-    global left_player, right_player, hit_ball
-    # Reset ball position and speed
-    hit_ball.goto(0, 0)
-    hit_ball.dx = original_dx
-    hit_ball.dy = original_dy
-    # Reset paddles to the middle
+    # HK: Reset paddles to the middle of the screen
     left_pad.goto(-400, 0)
     right_pad.goto(400, 0)
-    # Reset scores but leave the score display at the top
+
+    # HK: Reset scores to 0
     left_player = 0
     right_player = 0
-    sketch.clear()  # Clear old score
+    sketch.clear()  # HK: Clear the previous score from the screen
+    
+    # HK: Write the updated score to the top of the screen
     sketch.write("Left_player : {}    Right_player: {}".format(
         left_player, right_player), align="center", font=("Courier", 24, "normal"))
 
+    # HK: Set the game over flag to False to allow the game to continue
+    game_over = False
+
 # Main game loop
-game_over = False  # Flag to track if the game is over
+game_over = False  # HK: Initially, the game is not over
+# HK: Add key listener for resetting the game before the game is over
+sc.onkeypress(reset_game, "r")  # HK: Allow the user to press 'r' to reset the game during gameplay
 
-while not game_over:
-    sc.update()
-    time.sleep(0.01)  # Add delay to make game smoother
+while True:  # HK: Main loop for the game to keep running
+    sc.update()  # HK: Update the screen to reflect changes (like paddle or ball movement)
+    time.sleep(0.01)  # HK: Pause to make the game run at a consistent speed
 
-    hit_ball.setx(hit_ball.xcor() + hit_ball.dx)
-    hit_ball.sety(hit_ball.ycor() + hit_ball.dy)
+    if game_over:  # If the game is over, skip the rest of the loop
+        continue  
 
-    # Checking borders
-    if hit_ball.ycor() > 280:
-        hit_ball.sety(280)
-        hit_ball.dy *= -1
+    # HK: Move the ball based on its speed in both directions
+    hit_ball.setx(hit_ball.xcor() + hit_ball.dx)  # Move the ball horizontally
+    hit_ball.sety(hit_ball.ycor() + hit_ball.dy)  # Move the ball vertically
 
-    if hit_ball.ycor() < -280:
-        hit_ball.sety(-280)
-        hit_ball.dy *= -1
+    # HK: Check if the ball hits the top or bottom of the screen
+    if hit_ball.ycor() > 280:  # Ball hits the top
+        hit_ball.sety(280)  # Prevent ball from going out of bounds
+        hit_ball.dy *= -1  # Reverse Y-direction
 
-    # Scoring logic
-    if hit_ball.xcor() > 500:
-        hit_ball.goto(0, 0)
-        hit_ball.dy *= -1
-        left_player += 1
-        sketch.clear()
+    if hit_ball.ycor() < -280:  # Ball hits the bottom
+        hit_ball.sety(-280)  # Prevent ball from going out of bounds
+        hit_ball.dy *= -1  # Reverse Y-direction
+
+    # Scoring logic for when the ball passes a paddle
+    if hit_ball.xcor() > 500:  # Right side of the screen
+        hit_ball.goto(0, 0)  # Reset ball to center
+        hit_ball.dy *= -1  # Reverse Y-direction
+        left_player += 1  # Left player scores a point
+        sketch.clear()  # Clear previous score
         sketch.write("Left_player : {}    Right_player: {}".format(
-            left_player, right_player), align="center",
-            font=("Courier", 24, "normal"))
-        hit_ball.dx = original_dx  # Reset ball speed to original after score
-        hit_ball.dy = original_dy  # Reset ball speed to original after score
-        if left_player >= 5:  # Example win condition, change as needed
+            left_player, right_player), align="center", font=("Courier", 24, "normal"))
+        hit_ball.dx = original_dx  # Reset ball's X-speed
+        hit_ball.dy = original_dy  # Reset ball's Y-speed
+        if left_player >= 5:  # HK: Check if left player wins
             sketch.clear()
             sketch.goto(0, 0)
-            sketch.write("Left player wins! Press 'r' to restart.",
+            sketch.write("Left player wins! Press 'r' to restart.",  # Display win message
                          align="center", font=("Courier", 24, "normal"))
-            game_over = True  # End the game loop when someone wins
-            sc.onkeypress(reset_game, "r")  # Restart the game
-            sc.listen()
+            game_over = True  # End the game
 
-    if hit_ball.xcor() < -500:
-        hit_ball.goto(0, 0)
-        hit_ball.dy *= -1
-        right_player += 1
-        sketch.clear()
+    if hit_ball.xcor() < -500:  # Left side of the screen
+        hit_ball.goto(0, 0)  # Reset ball to center
+        hit_ball.dy *= -1  # Reverse Y-direction
+        right_player += 1  # Right player scores a point
+        sketch.clear()  # Clear previous score
         sketch.write("Left_player : {}    Right_player: {}".format(
-            left_player, right_player), align="center",
-            font=("Courier", 24, "normal"))
-        hit_ball.dx = original_dx  # Reset ball speed to original after score
-        hit_ball.dy = original_dy  # Reset ball speed to original after score
-        if right_player >= 5:  # Example win condition, change as needed
+            left_player, right_player), align="center", font=("Courier", 24, "normal"))
+        hit_ball.dx = original_dx  # Reset ball's X-speed
+        hit_ball.dy = original_dy  # Reset ball's Y-speed
+        if right_player >= 5:  # HK: Check if right player wins
             sketch.clear()
             sketch.goto(0, 0)
-            sketch.write("Right player wins! Press 'r' to restart.",
+            sketch.write("Right player wins! Press 'r' to restart.",  # Display win message
                          align="center", font=("Courier", 24, "normal"))
-            game_over = True  # End the game loop when someone wins
-            sc.onkeypress(reset_game, "r")  # Restart the game
-            sc.listen()
+            game_over = True  # End the game
 
-    # Paddle ball collision
+    # Paddle ball collision detection
     if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and \
             (hit_ball.ycor() < right_pad.ycor() + 50 and hit_ball.ycor() > right_pad.ycor() - 50):
-        hit_ball.setx(360)
-        hit_ball.dx *= -1
-        # Increase speed after a paddle hit - Hadi
-        hit_ball.dx *= 1.05
-        hit_ball.dy *= 1.05
-        #Joaquin - changes the colour on a hit
-        hit_ball.color(RandomColourChanger()) 
-
-    if (hit_ball.xcor() < -360 and hit_ball.xcor() > -370) and \
-            (hit_ball.ycor() < left_pad.ycor() + 50 and hit_ball.ycor() > left_pad.ycor() - 50):
-        hit_ball.setx(-360)
-        hit_ball.dx *= -1
-        # Increase speed after a paddle hit
-        hit_ball.dx *= 1.05
-        hit_ball.dy *= 1.05
-        #Joaquin - changes the colour on a hit
-        hit_ball.color(RandomColourChanger()) 
+        hit_ball.setx(360)  # Position ball at edge of the paddle
