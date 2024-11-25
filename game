@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Nov 24 17:58:12 2024
+
+@author: hadikalach-chemeng
+"""
+
 import turtle
 import time
 
@@ -14,7 +22,7 @@ left_pad.shape("square")
 left_pad.color("black")
 left_pad.shapesize(stretch_wid=6, stretch_len=2)
 left_pad.penup()
-left_pad.goto(-400, 0)
+left_pad.goto(-400, 0)  # Start in the middle of the screen vertically
 
 # Right paddle
 right_pad = turtle.Turtle()
@@ -23,41 +31,44 @@ right_pad.shape("square")
 right_pad.color("black")
 right_pad.shapesize(stretch_wid=6, stretch_len=2)
 right_pad.penup()
-right_pad.goto(400, 0)
+right_pad.goto(400, 0)  # Start in the middle of the screen vertically
 
 # Ball of circle shape
 hit_ball = turtle.Turtle()
-hit_ball.speed(4)  # Adjusted speed
+hit_ball.speed(4)  # Initial speed
 hit_ball.shape("circle")
 hit_ball.color("blue")
 hit_ball.penup()
 hit_ball.goto(0, 0)
-hit_ball.dx = 5
-hit_ball.dy = -5
+
+# Original speed values
+original_dx = 5
+original_dy = -5
+
+# Set ball speed to original values
+hit_ball.dx = original_dx
+hit_ball.dy = original_dy
 
 # Initialize the score
 left_player = 0
 right_player = 0
 
-# Displays the score
+# Displays the score at the top
 sketch = turtle.Turtle()
 sketch.speed(0)
 sketch.color("blue")
 sketch.penup()
 sketch.hideturtle()
-sketch.goto(0, 260)
+sketch.goto(0, 260)  # Score is at the top
 sketch.write("Left_player : 0    Right_player: 0",
              align="center", font=("Courier", 24, "normal"))
 
 # Functions to move paddles
-
-
 def paddleaup():
     y = left_pad.ycor()
-    if y < 250:  # Limit paddle movement
+    if y < 250:  # Limit paddle movement to top
         y += 20
         left_pad.sety(y)
-
 
 def paddleadown():
     y = left_pad.ycor()
@@ -65,20 +76,17 @@ def paddleadown():
         y -= 20
         left_pad.sety(y)
 
-
 def paddlebup():
     y = right_pad.ycor()
-    if y < 250:  # Limit paddle movement
+    if y < 250:  # Limit paddle movement to top
         y += 20
         right_pad.sety(y)
-
 
 def paddlebdown():
     y = right_pad.ycor()
     if y > -240:  # Limit paddle movement
         y -= 20
         right_pad.sety(y)
-
 
 # Keyboard bindings
 sc.listen()
@@ -87,8 +95,27 @@ sc.onkeypress(paddleadown, "s")  # Changed to 's'
 sc.onkeypress(paddlebup, "Up")
 sc.onkeypress(paddlebdown, "Down")
 
+# Function to reset the game
+def reset_game():
+    global left_player, right_player, hit_ball
+    # Reset ball position and speed
+    hit_ball.goto(0, 0)
+    hit_ball.dx = original_dx
+    hit_ball.dy = original_dy
+    # Reset paddles to the middle
+    left_pad.goto(-400, 0)
+    right_pad.goto(400, 0)
+    # Reset scores but leave the score display at the top
+    left_player = 0
+    right_player = 0
+    sketch.clear()  # Clear old score
+    sketch.write("Left_player : {}    Right_player: {}".format(
+        left_player, right_player), align="center", font=("Courier", 24, "normal"))
+
 # Main game loop
-while True:
+game_over = False  # Flag to track if the game is over
+
+while not game_over:
     sc.update()
     time.sleep(0.01)  # Add delay to make game smoother
 
@@ -104,6 +131,7 @@ while True:
         hit_ball.sety(-280)
         hit_ball.dy *= -1
 
+    # Scoring logic
     if hit_ball.xcor() > 500:
         hit_ball.goto(0, 0)
         hit_ball.dy *= -1
@@ -112,6 +140,16 @@ while True:
         sketch.write("Left_player : {}    Right_player: {}".format(
             left_player, right_player), align="center",
             font=("Courier", 24, "normal"))
+        hit_ball.dx = original_dx  # Reset ball speed to original after score
+        hit_ball.dy = original_dy  # Reset ball speed to original after score
+        if left_player >= 5:  # Example win condition, change as needed
+            sketch.clear()
+            sketch.goto(0, 0)
+            sketch.write("Left player wins! Press 'r' to restart.",
+                         align="center", font=("Courier", 24, "normal"))
+            game_over = True  # End the game loop when someone wins
+            sc.onkeypress(reset_game, "r")  # Restart the game
+            sc.listen()
 
     if hit_ball.xcor() < -500:
         hit_ball.goto(0, 0)
@@ -121,14 +159,31 @@ while True:
         sketch.write("Left_player : {}    Right_player: {}".format(
             left_player, right_player), align="center",
             font=("Courier", 24, "normal"))
+        hit_ball.dx = original_dx  # Reset ball speed to original after score
+        hit_ball.dy = original_dy  # Reset ball speed to original after score
+        if right_player >= 5:  # Example win condition, change as needed
+            sketch.clear()
+            sketch.goto(0, 0)
+            sketch.write("Right player wins! Press 'r' to restart.",
+                         align="center", font=("Courier", 24, "normal"))
+            game_over = True  # End the game loop when someone wins
+            sc.onkeypress(reset_game, "r")  # Restart the game
+            sc.listen()
 
     # Paddle ball collision
     if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and \
             (hit_ball.ycor() < right_pad.ycor() + 50 and hit_ball.ycor() > right_pad.ycor() - 50):
         hit_ball.setx(360)
         hit_ball.dx *= -1
+        # Increase speed after a paddle hit
+        hit_ball.dx *= 1.05
+        hit_ball.dy *= 1.05
 
     if (hit_ball.xcor() < -360 and hit_ball.xcor() > -370) and \
             (hit_ball.ycor() < left_pad.ycor() + 50 and hit_ball.ycor() > left_pad.ycor() - 50):
         hit_ball.setx(-360)
         hit_ball.dx *= -1
+        # Increase speed after a paddle hit
+        hit_ball.dx *= 1.05
+        hit_ball.dy *= 1.05
+
