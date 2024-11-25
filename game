@@ -1,5 +1,3 @@
-
-
 import turtle
 import time
 import random #added a random module for the colour changer - Joaquin
