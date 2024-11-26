@@ -174,7 +174,7 @@ while True:  # HK: Main loop for the game to keep running
     sc.update()  # HK: Update the screen to reflect the changes made in each iteration
     time.sleep(0.01)  # HK: Add a small delay to make the game run at a reasonable speed and feel smooth
 
-    if game_over:  # HK: If the game is over, stop executing the rest of the loop
+    if game_over == True:  # HK: If the game is over, stop executing the rest of the loop
         continue  # HK: Skip the rest of the loop and do nothing if the game is over
 
     hit_ball.setx(hit_ball.xcor() + hit_ball.dx)  # HK: Move the ball horizontally based on its dx value
