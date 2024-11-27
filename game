@@ -1,6 +1,6 @@
 import turtle
 import time
-import random
+import random # import random module so ball can change color
 
 # Create screen
 sc = turtle.Screen()  # This just creates a graphical screen, where our game will be.
@@ -54,12 +54,43 @@ middle.goto(0,0) #center of the grid
 middle.shape("square")
 middle.shapesize(stretch_wid = 1000, stretch_len=1) #length and width of the rectangle 
 
+# draw box for red player - PS
+redbox = turtle.Turtle()
+redbox.speed(0)
+redbox.color("red")
+redbox.penup()
+
+redbox.goto(-475, 120) 
+redbox.pendown()
+redbox.pensize(10)
+
+redbox.goto(-475, 120) 
+redbox.goto(-360, 120)  
+redbox.goto(-360, -120)  
+redbox.goto(-475, -120)  
+redbox.hideturtle() 
+
+# draw box for blue player - PS
+bluebox = turtle.Turtle()
+bluebox.speed(0)
+bluebox.color("blue")
+bluebox.penup()
+
+bluebox.goto(475, 120) 
+bluebox.pendown()
+bluebox.pensize(10)
+
+bluebox.goto(475, 120) 
+bluebox.goto(360, 120)  
+bluebox.goto(360, -120)  
+bluebox.goto(475, -120)  
+bluebox.hideturtle() 
 
 # Left paddle
 left_pad = turtle.Turtle()  # On turtle, this creates an object
 left_pad.speed(0)  # Initial speed of the paddle
 left_pad.shape("square")  # Shape of paddle we want
-left_pad.color("black")  # Color of the paddle
+left_pad.color("red")  # Color of the paddle # changed from black to red - PS
 left_pad.shapesize(stretch_wid=6, stretch_len=2)  # Dimensions of paddle
 left_pad.penup()  # Gets rid of the object as its moving, aka updating screen and gets rid of past paddles.
 left_pad.goto(-400, 0)  # The location of the paddle, is at end of left.
@@ -68,7 +99,7 @@ left_pad.goto(-400, 0)  # The location of the paddle, is at end of left.
 right_pad = turtle.Turtle()  # Basically Same as Left paddle
 right_pad.speed(0)
 right_pad.shape("square")
-right_pad.color("black")
+right_pad.color("blue") # changed from black to blue - PS
 right_pad.shapesize(stretch_wid=6, stretch_len=2)
 right_pad.penup()
 right_pad.goto(400, 0)  # The location of the paddle is near right end
@@ -96,12 +127,29 @@ right_player = 0
 # Displays the score at the top
 sketch = turtle.Turtle()
 sketch.speed(0)
-sketch.color("blue")
+sketch.color("blue") # changed from blue to black - PS
 sketch.penup()
 sketch.hideturtle()
 sketch.goto(0, 230)  # Score is at the top
-sketch.write("Left_player : 0    Right_player: 0",
-             align="center", font=("Courier", 24, "normal"))  # Basics of putting score on top of screen
+sketch.write("Red : 0    Blue : 0", # changed to red and blue - PS
+             align="center", font=("Russo_One", 24, "normal"))  # Basics of putting score on top of screen
+# font changed from Courier to Russo_One - PS
+
+# created border for scoreboard - PS
+scoreboard = turtle.Turtle()
+scoreboard.speed(0)
+scoreboard.color("blue")
+scoreboard.penup()
+
+scoreboard.goto(-180, 230) 
+scoreboard.pendown()
+scoreboard.pensize(5)
+
+scoreboard.goto(180, 230) 
+scoreboard.goto(180, 268)  
+scoreboard.goto(-180, 268)  
+scoreboard.goto(-180, 230)  
+scoreboard.hideturtle() 
 
 # Functions to move paddles
 def paddleaup():
@@ -160,8 +208,8 @@ def reset_game():  # HK: Function to reset the game
 
     # HK: Write the updated score to the top of the screen, EXACT SAME AS HOW CODE WAS GIVEN
     sketch.goto(0, 230)  # Score is at the top
-    sketch.write("Left_player : {}    Right_player: {}".format(
-        left_player, right_player), align="center", font=("Courier", 24, "normal"))
+    sketch.write("Red : {}    Blue : {}".format( # changed to Red and Blue - PS
+        left_player, right_player), align="center", font=("Courier", 24, "normal")) # font changed from Courier to Russo_One - PS
 
     game_over = False  # HK: Set the game over to False to allow the game to continue
 
@@ -184,13 +232,13 @@ while True:  # HK: Main loop for the game to keep running
     if hit_ball.ycor() > 280:  # HK: If the ball touches the top border of the screen
         hit_ball.sety(280)  # HK: Place the ball at the top border
         hit_ball.dy *= -1  # HK: Reverse the ball's vertical direction
-        #Joaquin - changes the colour on a hit of a paddle or wall
+        #Joaquin/Pranav - changes the colour on a hit of a paddle or wall
         hit_ball.color(RandomColourChanger()) 
 
     if hit_ball.ycor() < -280:  # HK: If the ball touches the bottom border of the screen
         hit_ball.sety(-280)  # HK: Place the ball at the bottom border
         hit_ball.dy *= -1  # HK: Reverse the ball's vertical direction
-        #Joaquin - changes the colour on a hit of a paddle or wall
+        #Joaquin/Pranav - changes the colour on a hit of a paddle or wall
         hit_ball.color(RandomColourChanger()) 
 
     # Scoring logic
@@ -201,15 +249,15 @@ while True:  # HK: Main loop for the game to keep running
         sketch.clear()  # HK: Clear the old score from the screen
         # HK: Update and display the new score
         sketch.goto(0, 230)  # Score is at the top
-        sketch.write("Left_player : {}    Right_player: {}".format(
-            left_player, right_player), align="center", font=("Courier", 24, "normal"))
+        sketch.write("Red : {}    Blue : {}".format( # changed to red and blue - PS
+            left_player, right_player), align="center", font=("Russo_One", 24, "normal")) # # font changed from Courier to Russo_One - PS
         hit_ball.dx = original_dx  # HK: Reset the ball's horizontal speed after a point is scored
         hit_ball.dy = original_dy  # HK: Reset the ball's vertical speed after a point is scored
         if left_player >= 5:  # HK: Check if the left player has won (for example, reaching 5 points)
             sketch.clear()  # HK: Clear the score display
             sketch.goto(0, 0)  # HK: Move the cursor to the center of the screen
-            sketch.write("Left player wins! Press 'r' to restart.",  # HK: Display a win message
-                         align="center", font=("Courier", 24, "normal"))
+            sketch.write("Red wins! Press 'r' to restart.",  # HK: Display a win message 
+                         align="center", font=("Russo_One", 24, "normal")) # changed to "Red wins" and font changed to Russo_One - PS
             game_over = True  # HK: Set the game_over flag to True to stop the game loop
 
     if hit_ball.xcor() < -500:  # HK: If the ball passes the left edge of the screen
@@ -219,15 +267,15 @@ while True:  # HK: Main loop for the game to keep running
         sketch.clear()  # HK: Clear the old score from the screen
         # HK: Update and display the new score
         sketch.goto(0, 230)  
-        sketch.write("Left_player : {}    Right_player: {}".format(
-            left_player, right_player), align="center", font=("Courier", 24, "normal"))
+        sketch.write("Red : {}    Blue : {}".format( # changed to red and blue - PS
+            left_player, right_player), align="center", font=("Russo_One", 24, "normal")) # font changed to Russo_One
         hit_ball.dx = original_dx  
         hit_ball.dy = original_dy  
     if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and (hit_ball.ycor() < right_pad.ycor() + 50 and hit_ball.ycor() > right_pad.ycor() - 50):
         hit_ball.setx(360)  #HK: If the ball hits the right paddle, reset its x position to avoid "sticking" to it
         hit_ball.dx *= -1.05  #HK: This is a quick way of make progressive speed increases, for x value and under this line for y values.
         hit_ball.dy *= 1.05  #HK: Slightly increase the vertical speed after hitting the paddle
-        #Joaquin - changes the colour on a hit
+        #Joaquin - changes the colour on a hit 
         hit_ball.color(RandomColourChanger()) 
 
     if (hit_ball.xcor() < -360 and hit_ball.xcor() > -370) and (hit_ball.ycor() < left_pad.ycor() + 50 and hit_ball.ycor() > left_pad.ycor() - 50):
