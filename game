@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Nov 29 08:33:08 2024
+
+@author: hadikalach-chemeng
+"""
+
 import turtle
 import time
 import random
@@ -261,7 +269,7 @@ while game_on:  # HK: Main loop for the game to keep running
     # Check if left player wins
     if left_player >= 5:  
         sketch.clear()  
-        sketch.goto(0, 250) 
+        sketch.goto(0, 240) 
         sketch.write("Left player wins!        Press 'r' to restart.",  # Display a win message
                      align="center", font=("Courier", 24, "normal"))
         game_over = True  # Set the game over flag
@@ -280,7 +288,7 @@ while game_on:  # HK: Main loop for the game to keep running
     # Check if right player wins
     if right_player >= 5:  
         sketch.clear()  
-        sketch.goto(0, 250) 
+        sketch.goto(0, 240) 
         sketch.write("Right player wins!        Press 'r' to restart.",  # Display a win message
                      align="center", font=("Courier", 24, "normal"))
         game_over = True  # Set the game over flag
@@ -333,5 +341,3 @@ while game_on:  # HK: Main loop for the game to keep running
         hit_ball.dy *= 1.05  
         #Joaquin - changes the colour on a hit
         hit_ball.color(RandomColourChanger()) 
-
-
