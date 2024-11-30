@@ -45,7 +45,7 @@ circle.speed(0)
 circle.color("white")
 circle.penup()
 circle.goto(0,0)
-circle.shape("circle")
+circle.shape("circle") 
 circle.shapesize(7,7)
 
 # Draw the green center circle part - Joaquin
@@ -267,22 +267,31 @@ while game_on:  # HK: Main loop for the game to keep running
         
         sketch.clear()  # Clear the old score from the screen
         sketch.goto(0, 230)  # Score is at the top
-        sketch.write(f"{left_player_name} : {left_player}    {right_player_name} : {right_player}", # ZS
+        
+        # Update left player display name with fire emoji
+        if left_player == 4:
+            left_display_name = left_player_name + " " + fire_emoji
+        else:
+            left_display_name = left_player_name
+
+        # Update right player display name with fire emoji
+        if right_player == 4:
+            right_display_name = right_player_name + " " + fire_emoji
+        else:
+            right_display_name = right_player_name
+
+        # Update score display
+        sketch.write(f"{left_display_name} : {left_player}    {right_display_name} : {right_player}",
                     align="center", font=("Courier", 24, "normal"))
+        
         hit_ball.dx = original_dx 
         hit_ball.dy = original_dy 
-        
-        # Display fire emoji when a player is one point away from winning
-        if left_player == 4:
-            left_display_name = f"{left_player_name} {fire_emoji}"
-        else: 
-            left_display_name = left_player_name
         
         # Check if left player wins
         if left_player == 5:
             sketch.clear()
             sketch.goto(0, 240)
-            sketch.write(f"{left_player_name} wins! Press 'r' to restart.", # ZS: Using an f-string to show that the left player won, displaying the variable name
+            sketch.write(f"{left_player_name} wins! Press    'r' to restart.",
                          align="center", font=("Courier", 24, "normal"))
             game_over = True
             
@@ -294,35 +303,48 @@ while game_on:  # HK: Main loop for the game to keep running
      
         sketch.clear()
         sketch.goto(0, 230)  # Score is at the top
-        sketch.write(f"{left_player_name} : {left_player}    {right_player_name} : {right_player}", # ZS
-                    align="center", font=("Courier", 24, "normal"))
-        hit_ball.dx = -original_dx  
-        hit_ball.dy = original_dy  
+        
+        # Update left player display name with fire emoji
+        if left_player == 4:
+            
+            left_display_name = left_player_name + " " + fire_emoji
+            
+        else:
+            left_display_name = left_player_name
 
-        # Display fire emoji when a player is one point away from winning
+        # Update right player display name with fire emoji
         if right_player == 4:
-            right_display_name = f"{right_player_name} {fire_emoji}" 
+            
+            right_display_name = right_player_name + " " + fire_emoji
+            
         else:
             right_display_name = right_player_name
 
-    # Check if right player wins
+        # Update score display
+        sketch.write(f"{left_display_name} : {left_player}       {right_display_name} : {right_player}",
+                    align="center", font=("Courier", 24, "normal"))
+        
+        hit_ball.dx = -original_dx  
+        hit_ball.dy = original_dy  
+
+        # Check if right player wins
         if right_player == 5:  
             sketch.clear()  
             sketch.goto(0, 240) 
-            sketch.write(f"{right_player_name} wins! Press 'r' to restart.", # ZS: Using an f-string to show that the right player won, displaying the variable name
+            sketch.write(f"{right_player_name} wins! Press    'r' to restart.",
                          align="center", font=("Courier", 24, "normal"))
             game_over = True  # Set the game over flag
 
-    if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and (hit_ball.ycor() < right_pad.ycor() + 50 and hit_ball.ycor() > right_pad.ycor() - 50):
+    if (hit_ball.xcor() > 362 and hit_ball.xcor() < 370) and (hit_ball.ycor() < right_pad.ycor() + 62 and hit_ball.ycor() > right_pad.ycor() - 62):
         hit_ball.setx(360)  
         hit_ball.dx *= -1.05  
         hit_ball.dy *= 1.05  
         # Joaquin - changes the colour on a hit
         hit_ball.color(RandomColourChanger()) 
 
-    if (hit_ball.xcor() < -360 and hit_ball.xcor() > -370) and (hit_ball.ycor() < left_pad.ycor() + 50 and hit_ball.ycor() > left_pad.ycor() - 50):
+    if (hit_ball.xcor() < -362 and hit_ball.xcor() > -370) and (hit_ball.ycor() < left_pad.ycor() + 62 and hit_ball.ycor() > left_pad.ycor() - 62):
         hit_ball.setx(-360)  
         hit_ball.dx *= -1.05  
         hit_ball.dy *= 1.05  
         # Joaquin - changes the colour on a hit
-        hit_ball.color(RandomColourChanger()) 
+        hit_ball.color(RandomColourChanger())  
