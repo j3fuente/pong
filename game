@@ -236,6 +236,11 @@ game_on = True
 # HK: Add key listener for resetting the game before the game is over
 sc.onkeypress(reset_game, "r")  # HK: Allow the user to press 'r' to reset the game during gameplay
 
+
+
+
+
+
 while game_on:  # HK: Main loop for the game to keep running
     sc.update()  # HK: Update the screen to reflect the changes made in each iteration
     time.sleep(0.01)  # HK: Add a small delay to make the game run at a reasonable speed and feel smooth
